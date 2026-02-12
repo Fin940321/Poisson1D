@@ -5,7 +5,7 @@ Computes Poisson potential and electric field for multiple voltages,
 then overlays them on the same plot for comparison.
 
 Usage:
-    python Poisson_overlay.py
+    python Poisson_overlayV2.py
 """
 
 import sys
@@ -182,7 +182,7 @@ def main():
     
     # ==================== Electric Field Overlay ====================
     fig1, ax1 = plt.subplots(figsize=(10, 7))
-    ax1.set_title("Electric Field of Poisson Potential - Voltage Comparison", 
+    ax1.set_title("Electric Field of Poisson Potential - [BMIM][TFSI] at CNT Electrodes", 
                   fontsize=14, fontweight='bold')
     ax1.set_xlabel("Z Position (Å)", fontsize=12)
     ax1.set_ylabel("Electric field (e/bohr²)", fontsize=12)
@@ -210,19 +210,83 @@ def main():
     
     # ==================== Voltage Overlay ====================
     fig2, ax2 = plt.subplots(figsize=(10, 7))
-    ax2.set_title("Voltage of Poisson Potential - Voltage Comparison", 
+    ax2.set_title("Voltage of Poisson Potential - [BMIM][TFSI] at CNT Electrodes", 
                   fontsize=14, fontweight='bold')
     ax2.set_xlabel("Z Position (Å)", fontsize=12)
     ax2.set_ylabel("Voltage (V)", fontsize=12)
+
+    # 定義計算本體電位 (Bulk Potential) 的 Z 軸範圍 (根據您的圖形，70-85A 是平坦的)
+    bulk_z_min = 70.0
+    bulk_z_max = 90.0
     
-    for res in results:
+    # 設定箭頭的 X 軸位置 (錯開以避免重疊)
+    arrow_x_positions = [75, 85]
+
+    for i, res in enumerate(results):
         voltage_label = f"{int(res['Vapp'])}V" if res['Vapp'] == int(res['Vapp']) else f"{res['Vapp']}V"
-        ax2.plot(res['z1_dist'], res['V_z'], 
+        
+        # 轉換資料為 numpy array 以便進行條件篩選
+        z_array = np.array(res['z1_dist'])
+        v_array = np.array(res['V_z'])
+
+        # 1. 繪製電位曲線
+        ax2.plot(z_array, v_array, 
                  color=res['color'], 
                  linestyle=res['linestyle'],
                  linewidth=1.5, 
                  label=f'{voltage_label}',
                  alpha=0.8)
+        
+        # 2. 透過取平均計算 V_bulk (Finding V_bulk by averaging in flat region)
+        # 篩選出位於 bulk_z_min 和 bulk_z_max 之間的索引
+        bulk_mask = (z_array >= bulk_z_min) & (z_array <= bulk_z_max)
+
+        if np.any(bulk_mask):
+            v_bulk_avg = np.mean(v_array[bulk_mask])
+        else:
+            # 如果範圍設定錯誤抓不到點，回退到舊方法或最後幾個點
+            print(f"Warning: No points found in range {bulk_z_min}-{bulk_z_max} for {voltage_label}. Using tail average.")
+            v_bulk_avg = np.mean(v_array[-20:])
+
+        # 3. 計算 Delta V_negative
+        # 陰極電位 (V_cathode) 理論上是 -Vapp/2
+        v_cathode = -res['Vapp'] / 2.0
+        delta_v = v_bulk_avg - v_cathode
+        print(f"  [{voltage_label}] V_bulk (avg 70-85A): {v_bulk_avg:.4f} V, V_cathode: {v_cathode:.2f} V, Delta V: {delta_v:.4f} V")
+        
+        # 4. 繪製雙箭頭 (Double-headed arrow)
+        x_arrow = arrow_x_positions[i] if i < len(arrow_x_positions) else 105
+        
+        # 箭頭：從 V_cathode 指向 V_bulk
+        ax2.annotate(
+            '', 
+            xy=(x_arrow, v_cathode), 
+            xytext=(x_arrow, v_bulk_avg),
+            arrowprops=dict(arrowstyle='<->', color=res['color'], lw=1.5, shrinkA=0, shrinkB=0)
+        )
+
+        # 5. 加上文字標籤 (Label with calculated value)
+        
+        # 設定文字偏移邏輯：
+        # 第一組數據 (2V, i=0) 文字放左邊
+        # 第二組數據 (4V, i=1) 文字放右邊，利用右邊較空的區域
+        if i == 0:
+            align_h = 'right'   # 文字靠右對齊 (即文字尾端貼著偏移點)
+            offset_x = -2.0     # 往左移 2 Å
+        else:
+            align_h = 'left'    # 文字靠左對齊 (即文字開頭貼著偏移點)
+            offset_x = 2.0      # 往右移 2 Å
+
+        label_text = r'$\Delta V_{neg} = ' + f'{delta_v:.2f}V$'
+        
+        ax2.text(x_arrow + offset_x, (v_cathode + v_bulk_avg) / 2, 
+                 label_text, 
+                 color=res['color'], 
+                 rotation=0,          # <--- 關鍵修改：改為 0 度 (水平)
+                 va='center',         # 垂直置中
+                 ha=align_h,          # 水平對齊方向 (動態調整)
+                 fontweight='bold',
+                 fontsize=15)
     
     ax2.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
     ax2.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, 
@@ -238,7 +302,7 @@ def main():
     
     # ==================== Combined Plot (2x1 layout) ====================
     fig3, (ax3, ax4) = plt.subplots(2, 1, figsize=(12, 12))
-    fig3.suptitle("Poisson Analysis - 2V vs 4V Comparison", fontsize=16, fontweight='bold', y=0.995)
+    fig3.suptitle("Poisson Analysis - [BMIM][TFSI] at CNT Electrodes", fontsize=16, fontweight='bold', y=0.995)
     
     # Electric Field
     ax3.set_title("Electric Field", fontsize=12, fontweight='bold')
