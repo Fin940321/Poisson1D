@@ -147,7 +147,7 @@ def compute_poisson_profile(config):
     
     print(f"  E_field range: [{min(E_z):.6f}, {max(E_z):.6f}] e/bohr²")
     print(f"  Voltage range: [{min(V_z):.4f}, {max(V_z):.4f}] V")
-    print(f"  V_cathode: {-Vapp/2.0:.4f} V, V_bulk: {V_bulk:.4f} V, delta_V: {V_bulk + Vapp/2.0:.4f} V")
+    print(f"  V_negative: {-Vapp/2.0:.4f} V, V_bulk: {V_bulk:.4f} V, delta_V: {V_bulk + Vapp/2.0:.4f} V")
     
     return {
         'z1_dist': z1_dist,
@@ -198,7 +198,7 @@ def main():
     
     ax1.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
     ax1.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, 
-                alpha=0.7, label=f'Cathode ({z_right_ref:.1f} Å)')
+                alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax1.legend(loc='best', fontsize=11)
     ax1.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
@@ -249,18 +249,18 @@ def main():
             v_bulk_avg = np.mean(v_array[-20:])
 
         # 3. 計算 Delta V_negative
-        # 陰極電位 (V_cathode) 理論上是 -Vapp/2
-        v_cathode = -res['Vapp'] / 2.0
-        delta_v = v_bulk_avg - v_cathode
-        print(f"  [{voltage_label}] V_bulk (avg 70-85A): {v_bulk_avg:.4f} V, V_cathode: {v_cathode:.2f} V, Delta V: {delta_v:.4f} V")
+        # 負電極電位 (V_negative) 理論上是 -Vapp/2
+        v_negative = -res['Vapp'] / 2.0
+        delta_v = v_bulk_avg - v_negative
+        print(f"  [{voltage_label}] V_bulk (avg 70-85A): {v_bulk_avg:.4f} V, V_negative: {v_negative:.2f} V, Delta V: {delta_v:.4f} V")
         
         # 4. 繪製雙箭頭 (Double-headed arrow)
         x_arrow = arrow_x_positions[i] if i < len(arrow_x_positions) else 105
         
-        # 箭頭：從 V_cathode 指向 V_bulk
+        # 箭頭：從 V_negative 指向 V_bulk
         ax2.annotate(
             '', 
-            xy=(x_arrow, v_cathode), 
+            xy=(x_arrow, v_negative), 
             xytext=(x_arrow, v_bulk_avg),
             arrowprops=dict(arrowstyle='<->', color=res['color'], lw=1.5, shrinkA=0, shrinkB=0)
         )
@@ -279,7 +279,7 @@ def main():
 
         label_text = r'$\Delta V_{neg} = ' + f'{delta_v:.2f}V$'
         
-        ax2.text(x_arrow + offset_x, (v_cathode + v_bulk_avg) / 2, 
+        ax2.text(x_arrow + offset_x, (v_negative + v_bulk_avg) / 2, 
                  label_text, 
                  color=res['color'], 
                  rotation=0,          # <--- 關鍵修改：改為 0 度 (水平)
@@ -290,7 +290,7 @@ def main():
     
     ax2.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
     ax2.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, 
-                alpha=0.7, label=f'Cathode ({z_right_ref:.1f} Å)')
+                alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax2.legend(loc='best', fontsize=11)
     ax2.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
@@ -314,7 +314,7 @@ def main():
                  color=res['color'], linestyle=res['linestyle'],
                  linewidth=1.5, label=f'{voltage_label}', alpha=0.8)
     ax3.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax3.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, alpha=0.7, label=f'Cathode')
+    ax3.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax3.legend(loc='best', fontsize=10)
     ax3.grid(True, linestyle='--', alpha=0.5)
     
@@ -328,7 +328,7 @@ def main():
                  color=res['color'], linestyle=res['linestyle'],
                  linewidth=1.5, label=f'{voltage_label}', alpha=0.8)
     ax4.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax4.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, alpha=0.7, label=f'Cathode')
+    ax4.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax4.legend(loc='best', fontsize=10)
     ax4.grid(True, linestyle='--', alpha=0.5)
     
