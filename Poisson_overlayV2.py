@@ -17,6 +17,14 @@ import matplotlib.pyplot as plt
 # Define voltages and their corresponding folders/files
 VOLTAGE_CONFIGS = [
     {
+        'voltage': 1.0,
+        'folder': './for_poisson_1V/',
+        'charge_file': 'hist_q_total_1V.dat',
+        'electrode_file': 'charges_output_1V.dat',
+        'color': 'green',
+        'linestyle': '-'
+    },
+    {
         'voltage': 2.0,
         'folder': './for_poisson_2V/',
         'charge_file': 'hist_q_total_2V.dat',
@@ -30,14 +38,6 @@ VOLTAGE_CONFIGS = [
         'charge_file': 'hist_q_total_4V.dat',
         'electrode_file': 'charges_output_4V.dat',
         'color': 'red',
-        'linestyle': '-'
-    },
-    {
-        'voltage': 1.0,
-        'folder': './for_poisson_1V/',
-        'charge_file': 'hist_q_total_1V.dat',
-        'electrode_file': 'charges_output_1V.dat',
-        'color': 'green',
         'linestyle': '-'
     }
 ]
