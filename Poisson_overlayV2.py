@@ -223,12 +223,21 @@ def main():
     ax2.set_xlabel("Z Position (Å)", fontsize=12)
     ax2.set_ylabel("Voltage (V)", fontsize=12)
 
-    # 定義計算本體電位 (Bulk Potential) 的 Z 軸範圍 (根據您的圖形，70-85A 是平坦的)
+    # 定義計算本體電位 (Bulk Potential) 的 Z 軸範圍
     bulk_z_min = 70.0
-    bulk_z_max = 90.0
-    
-    # 設定箭頭的 X 軸位置 (錯開以避免重疊)
-    arrow_x_positions = [75, 85]
+    bulk_z_max = 100.0
+
+    # 依 VOLTAGE_CONFIGS 順序，從左到右分配箭頭位置，避免重疊
+    arrow_margin = 5.0
+    arrow_x_positions = np.linspace(
+        bulk_z_min + arrow_margin,
+        bulk_z_max - arrow_margin,
+        len(VOLTAGE_CONFIGS)
+    )
+    print("  Arrow x-positions (left -> right, by VOLTAGE_CONFIGS order):")
+    for idx, cfg in enumerate(VOLTAGE_CONFIGS):
+        v_label = f"{int(cfg['voltage'])}V" if cfg['voltage'] == int(cfg['voltage']) else f"{cfg['voltage']}V"
+        print(f"    {v_label}: z = {arrow_x_positions[idx]:.1f} Å")
 
     for i, res in enumerate(results):
         voltage_label = f"{int(res['Vapp'])}V" if res['Vapp'] == int(res['Vapp']) else f"{res['Vapp']}V"
@@ -256,15 +265,15 @@ def main():
             print(f"Warning: No points found in range {bulk_z_min}-{bulk_z_max} for {voltage_label}. Using tail average.")
             v_bulk_avg = np.mean(v_array[-20:])
 
+        x_arrow = float(arrow_x_positions[i])
+
         # 3. 計算 Delta V_negative
         # 負電極電位 (V_negative) 理論上是 -Vapp/2
         v_negative = -res['Vapp'] / 2.0
         delta_v = v_bulk_avg - v_negative
-        print(f"  [{voltage_label}] V_bulk (avg 70-85A): {v_bulk_avg:.4f} V, V_negative: {v_negative:.2f} V, Delta V: {delta_v:.4f} V")
+        print(f"  [{voltage_label}] V_bulk (avg {bulk_z_min:.0f}-{bulk_z_max:.0f}A): {v_bulk_avg:.4f} V, V_negative: {v_negative:.2f} V, Delta V: {delta_v:.4f} V")
         
         # 4. 繪製雙箭頭 (Double-headed arrow)
-        x_arrow = arrow_x_positions[i] if i < len(arrow_x_positions) else 105
-        
         # 箭頭：從 V_negative 指向 V_bulk
         ax2.annotate(
             '', 
@@ -275,9 +284,7 @@ def main():
 
         # 5. 加上文字標籤 (Label with calculated value)
         
-        # 設定文字偏移邏輯：
-        # 第一組數據 (2V, i=0) 文字放左邊
-        # 第二組數據 (4V, i=1) 文字放右邊，利用右邊較空的區域
+        # 設定文字偏移邏輯：第一組放左邊，其餘放右邊
         if i == 0:
             align_h = 'right'   # 文字靠右對齊 (即文字尾端貼著偏移點)
             offset_x = -2.0     # 往左移 2 Å
