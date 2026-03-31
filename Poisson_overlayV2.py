@@ -31,6 +31,14 @@ VOLTAGE_CONFIGS = [
         'electrode_file': 'charges_output_4V.dat',
         'color': 'red',
         'linestyle': '-'
+    },
+    {
+        'voltage': 1.0,
+        'folder': './for_poisson_1V/',
+        'charge_file': 'hist_q_total_1V.dat',
+        'electrode_file': 'charges_output_1V.dat',
+        'color': 'green',
+        'linestyle': '-'
     }
 ]
 
@@ -197,7 +205,7 @@ def main():
                  alpha=0.8)
     
     ax1.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax1.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, 
+    ax1.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, 
                 alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax1.legend(loc='best', fontsize=11)
     ax1.grid(True, linestyle='--', alpha=0.5)
@@ -289,7 +297,7 @@ def main():
                  fontsize=15)
     
     ax2.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax2.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, 
+    ax2.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, 
                 alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax2.legend(loc='best', fontsize=11)
     ax2.grid(True, linestyle='--', alpha=0.5)
@@ -314,7 +322,7 @@ def main():
                  color=res['color'], linestyle=res['linestyle'],
                  linewidth=1.5, label=f'{voltage_label}', alpha=0.8)
     ax3.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax3.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
+    ax3.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax3.legend(loc='best', fontsize=10)
     ax3.grid(True, linestyle='--', alpha=0.5)
     
@@ -328,7 +336,7 @@ def main():
                  color=res['color'], linestyle=res['linestyle'],
                  linewidth=1.5, label=f'{voltage_label}', alpha=0.8)
     ax4.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax4.axvline(x=z_right_ref, color='orange', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
+    ax4.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax4.legend(loc='best', fontsize=10)
     ax4.grid(True, linestyle='--', alpha=0.5)
     
