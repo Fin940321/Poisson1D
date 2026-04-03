@@ -33,6 +33,14 @@ VOLTAGE_CONFIGS = [
         'linestyle': '-'
     },
     {
+        'voltage': 3.0,
+        'folder': './for_poisson_3V/',
+        'charge_file': 'hist_q_total_3V.dat',
+        'electrode_file': 'charges_output_3V.dat',
+        'color': 'orange',
+        'linestyle': '-'
+    },
+    {
         'voltage': 4.0,
         'folder': './for_poisson_4V/',
         'charge_file': 'hist_q_total_4V.dat',
