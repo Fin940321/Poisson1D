@@ -217,7 +217,7 @@ def main():
     
     # ==================== Electric Field Overlay ====================
     fig1, ax1 = plt.subplots(figsize=(10, 7))
-    ax1.set_title("Electric Field of Poisson Potential - [BMIM][TFSI] at CNT Electrodes", 
+    ax1.set_title("Electric Field of Poisson Potential - [BMIM][TFSI] at 2CNT Electrodes", 
                   fontsize=14, fontweight='bold')
     ax1.set_xlabel("Z Position (Å)", fontsize=12)
     ax1.set_ylabel("Electric field (e/bohr²)", fontsize=12)
@@ -232,7 +232,7 @@ def main():
                  alpha=0.8)
     
     ax1.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax1.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, 
+    ax1.axvline(x=z_right_ref, color='gray', linestyle='--', linewidth=2, 
                 alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax1.legend(loc='best', fontsize=11)
     ax1.grid(True, linestyle='--', alpha=0.5)
@@ -245,7 +245,7 @@ def main():
     
     # ==================== Voltage Overlay ====================
     fig2, ax2 = plt.subplots(figsize=(10, 7))
-    ax2.set_title("Voltage of Poisson Potential - [BMIM][TFSI] at CNT Electrodes", 
+    ax2.set_title("Voltage of Poisson Potential - [BMIM][TFSI] at 2CNT Electrodes", 
                   fontsize=14, fontweight='bold')
     ax2.set_xlabel("Z Position (Å)", fontsize=12)
     ax2.set_ylabel("Voltage (V)", fontsize=12)
@@ -331,7 +331,7 @@ def main():
                  fontsize=15)
     
     ax2.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax2.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, 
+    ax2.axvline(x=z_right_ref, color='gray', linestyle='--', linewidth=2, 
                 alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax2.legend(loc='best', fontsize=11)
     ax2.grid(True, linestyle='--', alpha=0.5)
@@ -344,7 +344,7 @@ def main():
     
     # ==================== Combined Plot (2x1 layout) ====================
     fig3, (ax3, ax4) = plt.subplots(2, 1, figsize=(12, 12))
-    fig3.suptitle("Poisson Analysis - [BMIM][TFSI] at CNT Electrodes", fontsize=16, fontweight='bold', y=0.995)
+    fig3.suptitle("Poisson Analysis - [BMIM][TFSI] at 2CNT Electrodes", fontsize=16, fontweight='bold', y=0.995)
     
     # Electric Field
     ax3.set_title("Electric Field", fontsize=12, fontweight='bold')
@@ -356,7 +356,7 @@ def main():
                  color=res['color'], linestyle=res['linestyle'],
                  linewidth=1.5, label=f'{voltage_label}', alpha=0.8)
     ax3.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax3.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
+    ax3.axvline(x=z_right_ref, color='gray', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax3.legend(loc='best', fontsize=10)
     ax3.grid(True, linestyle='--', alpha=0.5)
     
@@ -370,7 +370,7 @@ def main():
                  color=res['color'], linestyle=res['linestyle'],
                  linewidth=1.5, label=f'{voltage_label}', alpha=0.8)
     ax4.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
-    ax4.axvline(x=z_right_ref, color='black', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
+    ax4.axvline(x=z_right_ref, color='gray', linestyle='--', linewidth=2, alpha=0.7, label=f'Negative Electrode ({z_right_ref:.1f} Å)')
     ax4.legend(loc='best', fontsize=10)
     ax4.grid(True, linestyle='--', alpha=0.5)
     
