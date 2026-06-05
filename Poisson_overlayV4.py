@@ -243,7 +243,7 @@ def main():
     ax1.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     
-    efield_filename = 'Electricfield_Poisson_overlayV4.png'
+    efield_filename = 'Electricfield_Poisson_overlayV4_3.png'
     fig1.savefig(efield_filename, dpi=600, bbox_inches='tight')
     print(f"  ✓ {efield_filename}")
     plt.close(fig1)
@@ -342,7 +342,7 @@ def main():
     ax2.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     
-    voltage_filename = 'Voltage_Poisson_overlayV4.png'
+    voltage_filename = 'Voltage_Poisson_overlayV4_3.png'
     fig2.savefig(voltage_filename, dpi=600, bbox_inches='tight')
     print(f"  ✓ {voltage_filename}")
     plt.close(fig2)
@@ -351,9 +351,9 @@ def main():
     # Define 119 Å as 0 Å, and plot outward by 60 Å (from 119 Å towards 59 Å).
     # Crop Z-axis (which is now distance from 119 Å) to 0~60 Å.
     fig_shifted, ax_shifted = plt.subplots(figsize=(10, 7))
-    ax_shifted.set_title("Voltage of Poisson Potential - [BMIM][TFSI] at 2CNT Electrodes\n(Relative to Negative Electrode at 119 Å)", 
+    ax_shifted.set_title("Voltage of Poisson Potential - [BMIM][TFSI] at 2CNT Electrodes\n(Negative Electrode)", 
                       fontsize=14, fontweight='bold')
-    ax_shifted.set_xlabel("Z Position from 119 Å (Å)", fontsize=12)
+    ax_shifted.set_xlabel("Z Position from Negative Electrode (Å)", fontsize=12)
     ax_shifted.set_ylabel("Voltage (V)", fontsize=12)
 
     # Shift arrow X positions to new coordinate system (119.0 - original_x)
@@ -365,22 +365,22 @@ def main():
     for i, res in enumerate(results):
         voltage_label = f"{int(res['Vapp'])}V" if res['Vapp'] == int(res['Vapp']) else f"{res['Vapp']}V"
         
+        v_bulk_avg = res['V_bulk']
+        v_negative = -res['Vapp'] / 2.0
+        delta_v = v_bulk_avg - v_negative
+
         # Transform data coordinates: new_z = 119.0 - old_z
         z_array = np.array(res['z1_dist'])
         v_array = np.array(res['V_z'])
         z_shifted = 119.0 - z_array
-
-        # 1. 繪製電位曲線
-        ax_shifted.plot(z_shifted, v_array, 
-                     color=res['color'], 
-                     linestyle=res['linestyle'],
-                     linewidth=1.5, 
-                     label=f'{voltage_label}',
-                     alpha=0.8)
+        legend_label = f"{voltage_label} ($\Delta V_{{neg}} = {delta_v:.2f}V$)"
         
-        v_bulk_avg = res['V_bulk']
-        v_negative = -res['Vapp'] / 2.0
-        delta_v = v_bulk_avg - v_negative
+        ax_shifted.plot(z_shifted, v_array, 
+                      color=res['color'], 
+                      linestyle=res['linestyle'],
+                      linewidth=1.5, 
+                      label=legend_label,  # <--- 關鍵修改：更換成帶有計算數值的標籤
+                      alpha=0.8)        
         x_arrow = float(arrow_x_positions_shifted[i])
 
         # 2. 繪製雙箭頭
@@ -391,40 +391,21 @@ def main():
             arrowprops=dict(arrowstyle='<->', color=res['color'], lw=1.5, shrinkA=0, shrinkB=0)
         )
 
-        # 3. 加上文字標籤
-        # 在新座標系下，1V (index 0) 在右側 (44.0)，bulk在右側 (49.0)。因此標籤往右偏移 (+2.0)，靠左對齊。
-        # 其他電壓 (index > 0) 偏左，朝向電極 (0.0)。因此標籤往左偏移 (-2.0)，靠右對齊。
-        if i == 0:
-            align_h = 'left'
-            offset_x = 2.0
-        else:
-            align_h = 'right'
-            offset_x = -2.0
+    print(f"  [{voltage_label}] V_bulk: {v_bulk_avg:.4f} V, V_negative: {v_negative:.2f} V, Delta V: {delta_v:.4f} V")
 
-        label_text = r'$\Delta V_{neg} = ' + f'{delta_v:.2f}V$'
-        
-        ax_shifted.text(x_arrow + offset_x, (v_negative + v_bulk_avg) / 2, 
-                     label_text, 
-                     color=res['color'], 
-                     rotation=0,
-                     va='center',
-                     ha=align_h,
-                     fontweight='bold',
-                     fontsize=15)
-    
     ax_shifted.axhline(y=0, color='gray', linestyle=':', alpha=0.5)
     
     # Negative electrode marker in shifted coordinates
     x_electrode = 119.0 - z_right_ref
     ax_shifted.axvline(x=x_electrode, color='gray', linestyle='--', linewidth=2, 
-                alpha=0.7, label=f'Negative Electrode ({x_electrode:.2f} Å)')
+                alpha=0.7, label=f'Negative Electrode ({x_electrode:.1f} Å)')
     
     ax_shifted.set_xlim(0, 60)
     ax_shifted.legend(loc='best', fontsize=11)
     ax_shifted.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
     
-    voltage_shifted_filename = 'Voltage_Poisson_overlay_6.png'
+    voltage_shifted_filename = 'Voltage_Poisson_overlay_shifted_3.png'
     fig_shifted.savefig(voltage_shifted_filename, dpi=600, bbox_inches='tight')
     print(f"  ✓ {voltage_shifted_filename}")
     plt.close(fig_shifted)
@@ -462,7 +443,7 @@ def main():
     ax4.grid(True, linestyle='--', alpha=0.5)
     
     plt.tight_layout()
-    combined_filename = 'Poisson_combined_overlayV4.png'
+    combined_filename = 'Poisson_combined_overlayV4_3.png'
     fig3.savefig(combined_filename, dpi=600, bbox_inches='tight')
     print(f"  ✓ {combined_filename}")
     plt.close(fig3)
