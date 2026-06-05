@@ -351,7 +351,7 @@ def main():
     # Define 119 Å as 0 Å, and plot outward by 60 Å (from 119 Å towards 59 Å).
     # Crop Z-axis (which is now distance from 119 Å) to 0~60 Å.
     fig_shifted, ax_shifted = plt.subplots(figsize=(10, 7))
-    ax_shifted.set_title("Voltage of Poisson Potential - [BMIM][TFSI] at 2CNT Electrodes\n(Negative Electrode)", 
+    ax_shifted.set_title("Voltage of Poisson Potential - [BMIM][TFSI] at Graphene Electrode", 
                       fontsize=14, fontweight='bold')
     ax_shifted.set_xlabel("Z Position from Negative Electrode (Å)", fontsize=12)
     ax_shifted.set_ylabel("Voltage (V)", fontsize=12)
@@ -412,7 +412,7 @@ def main():
     
     # ==================== Combined Plot (2x1 layout) ====================
     fig3, (ax3, ax4) = plt.subplots(2, 1, figsize=(12, 12))
-    fig3.suptitle("Poisson Analysis - [BMIM][TFSI] at 2CNT Electrodes", fontsize=16, fontweight='bold', y=0.995)
+    fig3.suptitle("Poisson Analysis - [BMIM][TFSI] at Negative Electrode", fontsize=16, fontweight='bold', y=0.995)
     
     # Electric Field
     ax3.set_title("Electric Field", fontsize=12, fontweight='bold')
