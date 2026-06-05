@@ -16,12 +16,12 @@ Vapp = float(args.voltage)
 # 動態生成電壓標籤（整數電壓顯示為整數，否則保留小數）
 voltage_label = f"{int(Vapp)}V" if Vapp == int(Vapp) else f"{Vapp}V"
 
-folder1 = "./for_poisson_4V/"
+folder1 = f"./for_poisson_{voltage_label}/"
 
 pdb_file = folder1 + "start_nodrudes.pdb"
 # this file should contain charge density in e/nm^3, but we will convert it to e/Ang^3
-electrolyte_charge_file = folder1 + "hist_q_total_4V.dat"
-electrode_charge_file = folder1 + "charges_output_4V.dat"
+electrolyte_charge_file = folder1 + f"hist_q_total_{voltage_label}.dat"
+electrode_charge_file = folder1 + f"charges_output_{voltage_label}.dat"
 
 # conversions
 ang2bohr = 1.88973
@@ -194,7 +194,7 @@ ax1.legend(loc='best', fontsize=10)
 ax1.grid(True, linestyle='--', alpha=0.5)
 plt.tight_layout()
 
-efield_filename = f'Electricfield_Poisson_{voltage_label}_3.png'
+efield_filename = f'Electricfield_Poisson_{voltage_label}_single.png'
 fig1.savefig(efield_filename, dpi=600, bbox_inches='tight')
 print(f"  ✓ {efield_filename}")
 plt.close(fig1)
@@ -213,7 +213,7 @@ ax2.legend(loc='best', fontsize=10)
 ax2.grid(True, linestyle='--', alpha=0.5)
 plt.tight_layout()
 
-voltage_filename = f'Voltage_Poisson_{voltage_label}_3.png'
+voltage_filename = f'Voltage_Poisson_{voltage_label}_single.png'
 fig2.savefig(voltage_filename, dpi=600, bbox_inches='tight')
 print(f"  ✓ {voltage_filename}")
 plt.close(fig2)
