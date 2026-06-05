@@ -373,7 +373,7 @@ def main():
         z_array = np.array(res['z1_dist'])
         v_array = np.array(res['V_z'])
         z_shifted = 119.0 - z_array
-        legend_label = f"{voltage_label} ($\Delta V_{{neg}} = {delta_v:.2f}V$)"
+        legend_label = f"{voltage_label} ($\Delta V_{{neg}} = {delta_v:.2f}$V)"
         
         ax_shifted.plot(z_shifted, v_array, 
                       color=res['color'], 
@@ -401,6 +401,7 @@ def main():
                 alpha=0.7, label=f'Negative Electrode ({x_electrode:.1f} Å)')
     
     ax_shifted.set_xlim(0, 60)
+    ax_shifted.set_ylim(-2.0, 2.0)
     ax_shifted.legend(loc='best', fontsize=11)
     ax_shifted.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
